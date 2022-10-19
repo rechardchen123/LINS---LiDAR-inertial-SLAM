@@ -15,9 +15,12 @@
 //    contributors may be used to endorse or promote products derived from this
 //    software without specific prior written permission.
 
-#include <parameters.h>
+#include <string>
+#include "math_utils.h"
+#include "parameters.h"
 
-namespace parameter {
+namespace parameter
+{
 
 // !@ENABLE_CALIBRATION
 int CALIBARTE_IMU;
@@ -72,80 +75,88 @@ V3D INIT_TBL;
 Q4D INIT_RBL;
 
 template <typename T>
-T readParam(ros::NodeHandle& n, std::string name) {
-  T ans;
-  if (n.getParam(name, ans)) {
-    // ROS_INFO_STREAM("Loaded " << name << ": " << ans);
-  } else {
-    ROS_ERROR_STREAM("Failed to load " << name);
-    n.shutdown();
-  }
-  return ans;
+T readParam(ros::NodeHandle &n, std::string name)
+{
+    T ans;
+    if (n.getParam(name, ans))
+    {
+        // ROS_INFO_STREAM("Loaded " << name << ": " << ans);
+    }
+    else
+    {
+        ROS_ERROR_STREAM("Failed to load " << name);
+        n.shutdown();
+    }
+    return ans;
 }
 
-void readParameters(ros::NodeHandle& n) {
-  std::string config_file;
-  config_file = readParam<std::string>(n, "config_file");
-  cv::FileStorage fsSettings(config_file, cv::FileStorage::READ);
-  if (!fsSettings.isOpened()) {
-    std::cerr << "ERROR: Wrong path to settings" << std::endl;
-  }
+void readParameters(ros::NodeHandle &n)
+{
+    std::string config_file;
+    config_file = readParam<std::string>(n, "config_file");
+    cv::FileStorage fsSettings(config_file, cv::FileStorage::READ);
+    if (!fsSettings.isOpened())
+    {
+        std::cerr << "ERROR: Wrong path to settings" << std::endl;
+    }
 
-  CALIBARTE_IMU = fsSettings["calibrate_imu"];
-  SHOW_CONFIGURATION = fsSettings["show_configuration"];
-  AVERAGE_NUMS = fsSettings["average_nums"];
-  IMU_LIDAR_EXTRINSIC_ANGLE = fsSettings["imu_lidar_extrinsic_angle"];
-  IMU_MISALIGN_ANGLE = fsSettings["imu_misalign_angle"];
-  LINE_NUM = fsSettings["line_num"];
-  SCAN_NUM = fsSettings["scan_num"];
-  SCAN_PERIOD = fsSettings["scan_period"];
-  EDGE_THRESHOLD = fsSettings["edge_threshold"];
-  SURF_THRESHOLD = fsSettings["surf_threshold"];
-  NEAREST_FEATURE_SEARCH_SQ_DIST = fsSettings["nearest_feature_search_sq_dist"];
-  VERBOSE = fsSettings["verbose"];
-  ICP_FREQ = fsSettings["icp_freq"];
-  MAX_LIDAR_NUMS = fsSettings["max_lidar_nums"];
-  NUM_ITER = fsSettings["num_iter"];
-  LIDAR_SCALE = fsSettings["lidar_scale"];
-  LIDAR_STD = fsSettings["lidar_std"];
+    CALIBARTE_IMU = fsSettings["calibrate_imu"];
+    SHOW_CONFIGURATION = fsSettings["show_configuration"];
+    AVERAGE_NUMS = fsSettings["average_nums"];
+    IMU_LIDAR_EXTRINSIC_ANGLE = fsSettings["imu_lidar_extrinsic_angle"];
+    IMU_MISALIGN_ANGLE = fsSettings["imu_misalign_angle"];
+    LINE_NUM = fsSettings["line_num"];
+    SCAN_NUM = fsSettings["scan_num"];
+    SCAN_PERIOD = fsSettings["scan_period"];
+    EDGE_THRESHOLD = fsSettings["edge_threshold"];
+    SURF_THRESHOLD = fsSettings["surf_threshold"];
+    NEAREST_FEATURE_SEARCH_SQ_DIST = fsSettings["nearest_feature_search_sq_dist"];
+    VERBOSE = fsSettings["verbose"];
+    ICP_FREQ = fsSettings["icp_freq"];
+    MAX_LIDAR_NUMS = fsSettings["max_lidar_nums"];
+    NUM_ITER = fsSettings["num_iter"];
+    LIDAR_SCALE = fsSettings["lidar_scale"];
+    LIDAR_STD = fsSettings["lidar_std"];
 
-  fsSettings["imu_topic"] >> IMU_TOPIC;
-  fsSettings["lidar_topic"] >> LIDAR_TOPIC;
-  fsSettings["lidar_odometry_topic"] >> LIDAR_ODOMETRY_TOPIC;
-  fsSettings["lidar_mapping_topic"] >> LIDAR_MAPPING_TOPIC;
+    fsSettings["imu_topic"] >> IMU_TOPIC;
+    fsSettings["lidar_topic"] >> LIDAR_TOPIC;
+    fsSettings["lidar_odometry_topic"] >> LIDAR_ODOMETRY_TOPIC;
+    fsSettings["lidar_mapping_topic"] >> LIDAR_MAPPING_TOPIC;
 
-  ACC_N = fsSettings["acc_n"];
-  ACC_W = fsSettings["acc_w"];
-  GYR_N = fsSettings["gyr_n"];
-  GYR_W = fsSettings["gyr_w"];
+    ACC_N = fsSettings["acc_n"];
+    ACC_W = fsSettings["acc_w"];
+    GYR_N = fsSettings["gyr_n"];
+    GYR_W = fsSettings["gyr_w"];
 
-  readV3D(&fsSettings, "init_pos_std", INIT_POS_STD);
-  readV3D(&fsSettings, "init_vel_std", INIT_VEL_STD);
-  readV3D(&fsSettings, "init_att_std", INIT_ATT_STD);
-  readV3D(&fsSettings, "init_acc_std", INIT_ACC_STD);
-  readV3D(&fsSettings, "init_gyr_std", INIT_GYR_STD);
+    readV3D(&fsSettings, "init_pos_std", INIT_POS_STD);
+    readV3D(&fsSettings, "init_vel_std", INIT_VEL_STD);
+    readV3D(&fsSettings, "init_att_std", INIT_ATT_STD);
+    readV3D(&fsSettings, "init_acc_std", INIT_ACC_STD);
+    readV3D(&fsSettings, "init_gyr_std", INIT_GYR_STD);
 
-  readV3D(&fsSettings, "init_ba", INIT_BA);
-  readV3D(&fsSettings, "init_bw", INIT_BW);
-  readV3D(&fsSettings, "init_tbl", INIT_TBL);
-  readQ4D(&fsSettings, "init_rbl", INIT_RBL);
+    readV3D(&fsSettings, "init_ba", INIT_BA);
+    readV3D(&fsSettings, "init_bw", INIT_BW);
+    readV3D(&fsSettings, "init_tbl", INIT_TBL);
+    readQ4D(&fsSettings, "init_rbl", INIT_RBL);
 }
 
-void readV3D(cv::FileStorage* file, const std::__cxx11::string& name,
-             V3D& vec_eigen) {
-  cv::Mat vec_cv;
-  (*file)[name] >> vec_cv;
-  cv::cv2eigen(vec_cv, vec_eigen);
+void readV3D(cv::FileStorage *file, const std::string &name,
+             V3D &vec_eigen)
+{
+    cv::Mat vec_cv;
+    (*file)[name] >> vec_cv;
+    cv::cv2eigen(vec_cv, vec_eigen);
 }
 
-void readQ4D(cv::FileStorage* file, const std::__cxx11::string& name,
-             Q4D& quat_eigen) {
-  cv::Mat mat_cv;
-  (*file)[name] >> mat_cv;
-  M3D mat_eigen;
-  cv::cv2eigen(mat_cv, mat_eigen);
-  Q4D quat(mat_eigen);
-  quat_eigen = quat.normalized();
+void readQ4D(cv::FileStorage *file, const std::string &name,
+             Q4D &quat_eigen)
+{
+    cv::Mat mat_cv;
+    (*file)[name] >> mat_cv;
+    M3D mat_eigen;
+    cv::cv2eigen(mat_cv, mat_eigen);
+    Q4D quat(mat_eigen);
+    quat_eigen = quat.normalized();
 }
 
-}  // namespace parameter
+} // namespace parameter

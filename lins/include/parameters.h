@@ -36,7 +36,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
-#include <tic_toc.h>
+#include "tic_toc.h"
 
 #include <eigen3/Eigen/Dense>
 #include <fstream>
@@ -57,19 +57,20 @@ typedef Eigen::VectorXd VXD;
 typedef Eigen::MatrixXd MXD;
 typedef Eigen::Quaterniond Q4D;
 
-namespace parameter {
+namespace parameter
+{
 
 /*!@EARTH COEFFICIENTS */
-const double G0 = 9.81;                  // gravity
-const double deg = M_PI / 180.0;         // degree
-const double rad = 180.0 / M_PI;         // radian
-const double dph = deg / 3600.0;         // degree per hour
-const double dpsh = deg / sqrt(3600.0);  // degree per square-root hour
-const double mg = G0 / 1000.0;           // mili-gravity force
-const double ug = mg / 1000.0;           // micro-gravity force
-const double mgpsHz = mg / sqrt(1.0);    // mili-gravity force per second
-const double ugpsHz = ug / sqrt(1.0);    // micro-gravity force per second
-const double Re = 6378137.0;             ///< WGS84 Equatorial radius in meters
+const double G0 = 9.81;                 // gravity
+const double deg = M_PI / 180.0;        // degree
+const double rad = 180.0 / M_PI;        // radian
+const double dph = deg / 3600.0;        // degree per hour
+const double dpsh = deg / sqrt(3600.0); // degree per square-root hour
+const double mg = G0 / 1000.0;          // mili-gravity force
+const double ug = mg / 1000.0;          // micro-gravity force
+const double mgpsHz = mg / sqrt(1.0);   // mili-gravity force per second
+const double ugpsHz = ug / sqrt(1.0);   // micro-gravity force per second
+const double Re = 6378137.0;            ///< WGS84 Equatorial radius in meters
 const double Rp = 6356752.31425;
 const double Ef = 1.0 / 298.257223563;
 const double Wie = 7.2921151467e-5;
@@ -152,17 +153,18 @@ extern V3D INIT_BW;
 extern V3D INIT_TBL;
 extern Q4D INIT_RBL;
 
-void readParameters(ros::NodeHandle& n);
+void readParameters(ros::NodeHandle &n);
 
-void readV3D(cv::FileStorage* file, const std::string& name, V3D& vec_eigen);
+void readV3D(cv::FileStorage *file, const std::string &name, V3D &vec_eigen);
 
-void readQ4D(cv::FileStorage* file, const std::string& name, Q4D& quat_eigen);
+void readQ4D(cv::FileStorage *file, const std::string &name, Q4D &quat_eigen);
 
-enum StateOrder {
-  O_R = 0,
-  O_P = 3,
+enum StateOrder
+{
+    O_R = 0,
+    O_P = 3,
 };
 
-}  // namespace parameter
+} // namespace parameter
 
-#endif  // INCLUDE_PARAMETERS_H_
+#endif // INCLUDE_PARAMETERS_H_

@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.12)
 project(lins)
+ADD_COMPILE_OPTIONS(-std=c++11 )
+ADD_COMPILE_OPTIONS(-std=c++14 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 
 find_package(catkin REQUIRED COMPONENTS
@@ -46,7 +48,7 @@ link_directories(
 )
 
 
-list(APPEND SOURCE_FILES
+list(APPEND SOURCE_FILE
     ${PROJECT_SOURCE_DIR}/src/lib/parameters.cpp
 )
 
@@ -62,15 +64,15 @@ list(APPEND LINK_LIBS
     ${OpenCV_LIBRARY_DIRS}
 )
 
-add_executable(lins_fusion_node ${LINS_FILES} ${SOURCE_FILES})
+add_executable(lins_fusion_node ${LINS_FILES} ${SOURCE_FILE})
 target_link_libraries(lins_fusion_node ${LINK_LIBS})
 
-add_executable(image_projection_node src/image_projection_node.cpp ${SOURCE_FILES})
+add_executable(image_projection_node src/image_projection_node.cpp ${SOURCE_FILE})
 add_dependencies(image_projection_node ${catkin_EXPORTED_TARGETS} cloud_msgs_gencpp)
 target_link_libraries(image_projection_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
 
-add_executable(lidar_mapping_node src/lidar_mapping_node.cpp ${SOURCE_FILES})
+add_executable(lidar_mapping_node src/lidar_mapping_node.cpp ${SOURCE_FILE})
 target_link_libraries(lidar_mapping_node ${LINK_LIBS} gtsam)
 
-add_executable(transform_fusion_node src/transform_fusion_node.cpp ${SOURCE_FILES})
+add_executable(transform_fusion_node src/transform_fusion_node.cpp ${SOURCE_FILE})
 target_link_libraries(transform_fusion_node ${LINK_LIBS})

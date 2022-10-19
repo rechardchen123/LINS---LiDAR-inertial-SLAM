@@ -17,21 +17,22 @@
 
 #include <ros/ros.h>
 
-#include <parameters.h>
-#include <Estimator.h>
+#include "Estimator.h"
+#include "parameters.h"
 
-int main(int argc, char** argv) {
-  ros::init(argc, argv, "lins_fusion_node");
-  ros::NodeHandle nh;
-  ros::NodeHandle pnh("~");
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "lins_fusion_node");
+    ros::NodeHandle nh;
+    ros::NodeHandle pnh("~");
 
-  ROS_INFO("\033[1;32m---->\033[0m LINS Fusion Started.");
+    ROS_INFO("\033[1;32m---->\033[0m LINS Fusion Started.");
 
-  parameter::readParameters(pnh);
+    parameter::readParameters(pnh);
 
-  fusion::LinsFusion lins(nh, pnh);
-  lins.run();
+    fusion::LinsFusion lins(nh, pnh);
+    lins.run();
 
-  ros::spin();
-  return 0;
+    ros::spin();
+    return 0;
 }

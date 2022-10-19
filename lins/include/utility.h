@@ -2,7 +2,7 @@
 #define INCLUDE_UTILITY_H_
 
 #include <nav_msgs/Odometry.h>
-#include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 #include <pcl/common/common.h>
 #include <pcl/filters/filter.h>
 #include <pcl/filters/voxel_grid.h>
@@ -92,16 +92,18 @@ extern const float historyKeyframeFitnessScore = 0.3;
 
 extern const float globalMapVisualizationSearchRadius = 500.0;
 
-struct smoothness_t {
+struct smoothness_t
+{
   float value;
   size_t ind;
 };
 
-struct by_value {
-  bool operator()(smoothness_t const &left, smoothness_t const &right) {
+struct by_value
+{
+  bool operator()(smoothness_t const &left, smoothness_t const &right)
+  {
     return left.value < right.value;
   }
 };
 
-#endif  // INCLUDE_UTILITY_H_
-
+#endif // INCLUDE_UTILITY_H_
